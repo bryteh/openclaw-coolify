@@ -76,8 +76,7 @@ ENV PATH="/root/.bun/bin:${PATH}"
 # Install Vercel & Marp (Slides) & QMD (Search)
 # Node & NPM are already provided by base image
 # QMD requires bun and global install
-RUN npm install -g vercel @marp-team/marp-cli && \
-    bun install -g https://github.com/tobi/qmd && \
+RUN npm install -g vercel @marp-team/marp-cli https://github.com/tobi/qmd && \
     hash -r
 
 # Configure QMD Persistence
@@ -100,7 +99,7 @@ RUN ln -s /usr/bin/fdfind /usr/bin/fd || true && \
 WORKDIR /app
 
 # Set PATH for global npm binaries - standard location for root typically /usr/local, but we keep node's structure or just use global
-ENV PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
+ENV PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/root/.bun/bin"
 
 # Run Moltbot install scripts as root
 ARG MOLT_BOT_BETA=false
@@ -115,7 +114,7 @@ ENV MOLT_BOT_BETA=${MOLT_BOT_BETA} \
 RUN curl -fsSL https://molt.bot/install.sh | bash
 
 # Install AI Tool Suite (globally as root)
-RUN npm install -g @openai/codex @google/gemini-cli && \
+RUN bun install -g @openai/codex @google/gemini-cli && \
     curl -fsSL https://claude.ai/install.sh | bash && \
     curl -L https://code.kimi.com/install.sh | bash
 
