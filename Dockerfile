@@ -29,10 +29,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     imagemagick \
     graphviz \
     sqlite3 \
-    # Security: Bitwarden CLI (rbw) & Pass
-    rbw \
+    # Security: Pass (GPG)
     pass \
     && rm -rf /var/lib/apt/lists/*
+
+# Install rbw (Bitwarden CLI) - Not in Debian Bookworm repos
+RUN curl -L --output rbw.deb https://git.tozt.net/rbw/releases/deb/rbw_1.12.1_amd64.deb && \
+    dpkg -i rbw.deb && \
+    rm rbw.deb
 
 # Install Cloudflare Tunnel (cloudflared)
 RUN curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && \
