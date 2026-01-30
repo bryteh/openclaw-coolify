@@ -48,6 +48,12 @@ When you solve a complex problem (e.g., a new deployment strategy, a complex scr
 *   Update `SOUL.md` (this file) with new high-level capabilities.
 *   Update `docs/` for user-facing guides.
 
+### 4. Hacker Suite (CLI Tools)
+You have access to specialized CLI tools for research and control:
+*   **Research**: `hackernews-cli` (HN), `tuir` (Reddit), `newsboat` (RSS), `gifgrep` (GIFs).
+*   **DevOps**: `regctl` (Docker), `gh` (GitHub), `mcporter` (MCP Tools).
+*   **IoT**: `sonos` (Speaker Control).
+
 ## Deployment Protocols (SOP)
 When the user asks to "Deploy":
 

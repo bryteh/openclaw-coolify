@@ -83,7 +83,7 @@ RUN ln -s /usr/bin/fdfind /usr/bin/fd || true && \
 WORKDIR /app
 
 # ✅ FINAL PATH (important)
-ENV PATH="/usr/local/bin:/usr/bin:/bin:/root/.local/bin:/root/.npm-global/bin:/root/.bun/bin:/root/.bun/install/global/bin:/root/.claude/bin:/root/.kimi/bin"
+ENV PATH="/usr/local/bin:/usr/bin:/bin:/root/.local/bin:/root/.npm-global/bin:/root/.bun/bin:/root/.bun/install/global/bin:/root/.claude/bin:/root/.kimi/bin:/root/go/bin"
 
 # OpenClaw install
 ARG OPENCLAW_BETA=false
@@ -111,6 +111,20 @@ RUN bun pm -g untrusted
 RUN bun install -g @openai/codex @google/gemini-cli opencode-ai @steipete/summarize @hyperbrowser/agent && \
     curl -fsSL https://claude.ai/install.sh | bash && \
     curl -L https://code.kimi.com/install.sh | bash
+
+# --- 🛠️ POWER USER / HACKER SUITE ---
+# Installs: Sonos, GifGrep, MCPorter, Reddit(Tuir), Newsboat, Regctl
+RUN bun install -g mcporter markdansi && \
+    # Go Tools
+    go install github.com/steipete/sonoscli/cmd/sonos@latest && \
+    go install github.com/steipete/gifgrep/cmd/gifgrep@latest && \
+    # Python Tools
+    pip3 install hackernews-cli tuir --break-system-packages && \
+    # System Tools
+    apt-get update && apt-get install -y newsboat && rm -rf /var/lib/apt/lists/* && \
+    # Regctl (Docker Registry Explorer)
+    curl -L "https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64" -o /usr/local/bin/regctl && \
+    chmod +x /usr/local/bin/regctl
 
 
 RUN ln -sf /root/.claude/bin/claude /usr/local/bin/claude || true && \
