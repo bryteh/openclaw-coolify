@@ -19,10 +19,6 @@ fi
 mkdir -p "$OPENCLAW_STATE" "$WORKSPACE_DIR"
 chmod 700 "$OPENCLAW_STATE"
 
-# 🖇️ Convenience Symlinks
-ln -sf "$WORKSPACE_DIR" /root/workspace 2>/dev/null || true
-ln -sf "$WORKSPACE_DIR" /root/workplace 2>/dev/null || true
-
 mkdir -p "$OPENCLAW_STATE/credentials"
 mkdir -p "$OPENCLAW_STATE/agents/main/sessions"
 chmod 700 "$OPENCLAW_STATE/credentials"
@@ -49,9 +45,12 @@ seed_agent() {
 
   # ✅ MAIN agent gets ORIGINAL repo SOUL.md and BOOTSTRAP.md
   if [ "$id" = "main" ]; then
-    if [ -f "./SOUL.md" ] && [ ! -f "$dir/SOUL.md" ]; then
-      echo "✨ Copying original SOUL.md to $dir"
-      cp "./SOUL.md" "$dir/SOUL.md"
+    # Overwrite if missing OR if it's the 'helpful and premium AI assistant' fallback
+    if [ -f "./SOUL.md" ]; then
+      if [ ! -f "$dir/SOUL.md" ] || grep -q "helpful and premium AI assistant" "$dir/SOUL.md"; then
+        echo "✨ Syncing original SOUL.md to $dir..."
+        cp "./SOUL.md" "$dir/SOUL.md"
+      fi
     fi
     if [ -f "./BOOTSTRAP.md" ] && [ ! -f "$dir/BOOTSTRAP.md" ]; then
       echo "🚀 Seeding BOOTSTRAP.md to $dir"
