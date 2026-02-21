@@ -83,8 +83,7 @@ RUN --mount=type=cache,target=/data/.npm \
     npm install -g openclaw@beta; \
     else \
     npm install -g openclaw; \
-    fi && \
-    command -v openclaw
+    fi 
 
 # Claude + Kimi
 RUN curl -fsSL https://claude.ai/install.sh | bash && \
