@@ -211,4 +211,13 @@ echo "      openclaw onboard"
 echo ""
 echo "=================================================================="
 echo "🔧 Current ulimit is: $(ulimit -n)"
-exec node dist/index.js gateway run
+
+# Smart routing to find the correct OpenClaw executable
+if [ -f "openclaw.mjs" ]; then
+    exec node openclaw.mjs gateway run
+elif [ -f "dist/entry.js" ]; then
+    exec node dist/entry.js gateway run
+else
+    BIN_PATH=$(node -p "const b=require('./package.json').bin; typeof b==='string'?b:b.openclaw")
+    exec node "$BIN_PATH" gateway run
+fi
