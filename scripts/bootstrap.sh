@@ -212,15 +212,20 @@ echo ""
 echo "=================================================================="
 echo "🔧 Current ulimit is: $(ulimit -n)"
 
-# 1. Walk into the folder where the code actually lives
-cd /app
 
-# 2. Add the local node_modules to the system path just to be safe
-export PATH="/app/node_modules/.bin:$HOME/.bun/bin:$HOME/.local/share/pnpm:$HOME/.npm-global/bin:$PATH"
+# --- THE TRUE PERMANENT FIX ---
+# 1. Find the hidden system folder where NPM downloads global software
+OPENCLAW_DIR="$(npm root -g)/openclaw"
 
-# 3. Start the Gateway!
-if command -v openclaw >/dev/null 2>&1; then
-    exec openclaw gateway run
-else
-    exec npx openclaw gateway run
+# 2. Safety Net: If Coolify wiped the files during build, reinstall them on the spot
+if [ ! -d "$OPENCLAW_DIR" ]; then
+    echo "Global installation missing. Reinstalling OpenClaw..."
+    npm install -g openclaw
 fi
+
+# 3. Read the exact startup file name directly from the software's blueprint
+cd "$OPENCLAW_DIR"
+BIN_FILE=$(node -p "const p=require('./package.json'); p.bin ? (typeof p.bin === 'string' ? p.bin : Object.values(p.bin)[0]) : 'dist/index.js'")
+
+# 4. Turn on the Gateway using the direct, unbreakable file path!
+exec node "$BIN_FILE" gateway run
