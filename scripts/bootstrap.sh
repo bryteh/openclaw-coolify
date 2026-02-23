@@ -211,4 +211,4 @@ echo "      openclaw onboard"
 echo ""
 echo "=================================================================="
 echo "🔧 Current ulimit is: $(ulimit -n)"
-exec npx openclaw gateway run
+exec node dist/index.js gateway run
