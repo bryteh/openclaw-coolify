@@ -212,6 +212,15 @@ echo ""
 echo "=================================================================="
 echo "🔧 Current ulimit is: $(ulimit -n)"
 
-# Tell Linux exactly where to find the hidden package manager shortcuts
-export PATH="/root/.bun/bin:/root/.local/share/pnpm:/root/.npm-global/bin:/app/node_modules/.bin:$PATH"
-exec openclaw gateway run
+# 1. Walk into the folder where the code actually lives
+cd /app
+
+# 2. Add the local node_modules to the system path just to be safe
+export PATH="/app/node_modules/.bin:$HOME/.bun/bin:$HOME/.local/share/pnpm:$HOME/.npm-global/bin:$PATH"
+
+# 3. Start the Gateway!
+if command -v openclaw >/dev/null 2>&1; then
+    exec openclaw gateway run
+else
+    exec npx openclaw gateway run
+fi
