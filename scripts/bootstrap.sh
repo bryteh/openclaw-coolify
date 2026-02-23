@@ -212,12 +212,6 @@ echo ""
 echo "=================================================================="
 echo "🔧 Current ulimit is: $(ulimit -n)"
 
-# Smart routing to find the correct OpenClaw executable
-if [ -f "openclaw.mjs" ]; then
-    exec node openclaw.mjs gateway run
-elif [ -f "dist/entry.js" ]; then
-    exec node dist/entry.js gateway run
-else
-    BIN_PATH=$(node -p "const b=require('./package.json').bin; typeof b==='string'?b:b.openclaw")
-    exec node "$BIN_PATH" gateway run
-fi
+# Tell Linux exactly where to find the hidden package manager shortcuts
+export PATH="/root/.bun/bin:/root/.local/share/pnpm:/root/.npm-global/bin:/app/node_modules/.bin:$PATH"
+exec openclaw gateway run
