@@ -89,10 +89,10 @@ RUN --mount=type=cache,target=/data/.npm \
 RUN curl -L https://github.com/azlux/uv/releases/latest/download/uv-linux-x64 -o /usr/local/bin/uv && \
     chmod +x /usr/local/bin/uv
 
-# Claude + Kimi
-RUN curl -fsSL https://claude.ai/install.sh | bash && \
-    curl -L https://code.kimi.com/install.sh | bash && \
-    command -v uv
+# # Claude + Kimi
+# RUN curl -fsSL https://claude.ai/install.sh | bash && \
+#     curl -L https://code.kimi.com/install.sh | bash && \
+#     command -v uv
 
 # Make sure uv and other local bins are available
 ENV PATH="/root/.local/bin:${PATH}"
