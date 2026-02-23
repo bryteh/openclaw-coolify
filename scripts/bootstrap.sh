@@ -213,19 +213,18 @@ echo "=================================================================="
 echo "🔧 Current ulimit is: $(ulimit -n)"
 
 
-# --- THE TRUE PERMANENT FIX ---
-# 1. Find the hidden system folder where NPM downloads global software
-OPENCLAW_DIR="$(npm root -g)/openclaw"
+# --- THE INDESTRUCTIBLE FIX ---
+# 1. Step out of the app folder to prevent NPM confusion
+cd /tmp
 
-# 2. Safety Net: If Coolify wiped the files during build, reinstall them on the spot
-if [ ! -d "$OPENCLAW_DIR" ]; then
-    echo "Global installation missing. Reinstalling OpenClaw..."
-    npm install -g openclaw
+# 2. Get the exact, absolute path where the global binary should be
+GLOBAL_BIN="$(npm prefix -g)/bin/openclaw"
+
+# 3. If Coolify's volume wipe deleted the binary, reinstall it live!
+if [ ! -f "$GLOBAL_BIN" ] && [ ! -L "$GLOBAL_BIN" ]; then
+    echo "Coolify volume wipe detected! Reinstalling core files..."
+    npm install -g openclaw@latest
 fi
 
-# 3. Read the exact startup file name directly from the software's blueprint
-cd "$OPENCLAW_DIR"
-BIN_FILE=$(node -p "const p=require('./package.json'); p.bin ? (typeof p.bin === 'string' ? p.bin : Object.values(p.bin)[0]) : 'dist/index.js'")
-
-# 4. Turn on the Gateway using the direct, unbreakable file path!
-exec node "$BIN_FILE" gateway run
+# 4. Start the Gateway using the absolute path!
+exec "$GLOBAL_BIN" gateway run
